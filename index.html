@@ -12,10 +12,21 @@
             padding: 0;
             background-color: #f7f7f7; 
             color: #333;
-            /* ❌ PENTING: Flexbox centering dihilangkan untuk mencegah lompatan layar */
             min-height: 100vh;
-            position: relative; /* Diperlukan agar absolute positioning anak bekerja */
+            position: relative; 
         }
+
+        /* 🚨 BARU: Kunci Layar saat Transisi untuk Mencegah Scroll Jump */
+        .scroll-lock {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            /* Tambahan: Pastikan konten utama tidak terpengaruh z-index aneh */
+            z-index: 9999; 
+        }
+        
         .quiz-container {
             width: 90%;
             max-width: 650px;
@@ -25,13 +36,11 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
             
-            /* 👇 KUNCI PERBAIKAN: Absolute Centering yang stabil */
+            /* Absolute Centering yang stabil */
             position: absolute;
-            top: 50%; /* Pindahkan 50% dari atas */
-            left: 50%; /* Pindahkan 50% dari kiri */
-            transform: translate(-50%, -50%); /* Geser kembali 50% dari ukuran diri sendiri */
-            
-            /* Memastikan konten kuis berada di atas */
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
             z-index: 10;
         }
         h1 {
@@ -320,6 +329,11 @@
         // KUNCI PERBAIKAN JUMP/REFLOW: Tangkap dan set tinggi container pilihan
         const currentHeight = choicesContainer.offsetHeight;
         choicesContainer.style.height = `${currentHeight}px`;
+
+        // 🚨 KUNCI LAYAR/SCROLL FIX:
+        const scrollPosition = window.scrollY; // Catat posisi scroll saat ini
+        document.body.classList.add('scroll-lock'); // Kunci body (position:fixed)
+        document.body.style.top = `-${scrollPosition}px`; // Pertahankan posisi visual
         
         // 2. Beri jeda 400 milidetik (0.4 detik) untuk konfirmasi klik
         setTimeout(() => {
@@ -331,6 +345,11 @@
 
             // KUNCI PERBAIKAN JUMP/REFLOW: Hapus tinggi agar container bisa menampung konten baru
             choicesContainer.style.height = ''; 
+
+            // 🚨 BUKA KUNCI LAYAR/SCROLL FIX:
+            document.body.classList.remove('scroll-lock'); // Lepas kunci body
+            document.body.style.top = ''; // Hapus style top
+            window.scrollTo(0, scrollPosition); // Kembalikan scroll ke posisi awal
             
             // 3. Lanjutkan ke langkah berikutnya
             currentStep++; 
