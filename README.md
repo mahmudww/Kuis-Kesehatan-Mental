@@ -4,4 +4,6 @@ Kuis ini dibuat untuk membantu pengguna Gen Z/Milenial mengecek kondisi mental m
 
 Kuis ini hanya membutuhkan waktu kurang dari 3 menit.
 
+Link: https://mahmudww.github.io/Kuis-Kesehatan-Mental/
+
 Penting: Kuis ini hanya alat bantu self-awareness dan bukan pengganti diagnosa profesional.
