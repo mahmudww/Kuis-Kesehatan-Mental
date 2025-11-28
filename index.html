@@ -27,7 +27,7 @@
             text-align: center;
         }
         h1 {
-            color: #ff6b6b; /* Warna lebih ceria/relatable */
+            color: #ff6b6b;
             border-bottom: 2px solid #ff6b6b;
             padding-bottom: 10px;
             margin-bottom: 30px;
@@ -44,16 +44,20 @@
             font-weight: 600;
             text-align: left;
             padding: 10px;
-            border-left: 5px solid #4ecdc4; /* Warna border baru */
+            border-left: 5px solid #4ecdc4;
+            /* 👇 TAMBAHAN: Transisi untuk efek fade-in */
+            transition: opacity 0.4s ease-in-out; 
         }
         /* Style untuk Gambar Pertanyaan (Rata Tengah) */
         #question-image {
             width: 100%; 
             max-width: 400px; 
             height: auto; 
-            margin: 0 auto 20px auto; /* Membuat gambar rata tengah (auto) */
-            display: block; /* Penting agar margin auto bekerja */
+            margin: 0 auto 20px auto;
+            display: block;
             border-radius: 8px;
+            /* 👇 TAMBAHAN: Transisi untuk efek fade-in */
+            transition: opacity 0.4s ease-in-out;
         }
 
         .choice-btn {
@@ -67,9 +71,11 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1em;
-            transition: background-color 0.15s, border-color 0.15s;
+            /* Transisi juga diupdate untuk opacity */
+            transition: background-color 0.15s, border-color 0.15s, opacity 0.4s ease-in-out;
             text-align: left;
         }
+
         .choice-btn:hover {
             background-color: #e9ecef;
             border-color: #ff6b6b;
@@ -78,8 +84,8 @@
 
         /* Class untuk Konfirmasi Klik (UX Smartphone) */
         .choice-btn.clicked {
-            background-color: #ff6b6b; /* Warna latar belakang berubah drastis saat diklik */
-            color: white;             /* Teks menjadi putih agar kontras */
+            background-color: #ff6b6b;
+            color: white;
             border-color: #ff6b6b;
         }
 
@@ -107,9 +113,9 @@
         }
 
         /* Warna Border untuk Interpretasi */
-        .low { border-left-color: #28a745; }    /* Hijau */
-        .moderate { border-left-color: #ffc107; } /* Kuning */
-        .high { border-left-color: #dc3545; }    /* Merah */
+        .low { border-left-color: #28a745; }
+        .moderate { border-left-color: #ffc107; }
+        .high { border-left-color: #dc3545; }
         
         .score-footer {
             margin-top: 30px;
@@ -129,7 +135,7 @@
     <div id="intro-screen">
         <p style="font-size: 1.1em; text-align: left;">Hai! Kuis ini dibuat untuk bantu kamu kenalan lebih dekat sama kondisi mentalmu. Kami akan identifikasi area yang mungkin butuh perhatian.</p>
         <p style="font-size: 1.1em; text-align: left; font-weight: bold; color: #ff6b6b;">📝 Jawab dengan jujur dan cepat. Kuis ini hanya butuh waktu <strong>KURANG DARI 3 MENIT!</strong></p>
-        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan bukan pengganti diagnosa profesional.</p>
+        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan **gak** pengganti diagnosa profesional.</p>
         <button id="start-button" class="choice-btn" style="text-align: center; background-color: #ff6b6b; color: white; margin-top: 30px;">Mulai Cek Kondisi Mental (3 Menit)</button>
     </div>
 
@@ -151,7 +157,7 @@
         </div>
 
         <div class="score-footer">
-            <p>Penting: Kalau kamu dapat skor Sedang atau Tinggi di salah satu kategori, itu tandanya kamu mungkin butuh waktu istirahat lebih atau mungkin sudah saatnya ngobrol dengan profesional (psikolog/terapis) ya. <i>It's okay to ask for help!</i></p>
+            <p>Penting: Kalau kamu dapat skor Sedang atau Tinggi di salah satu kategori, itu tandanya kamu butuh waktu istirahat lebih atau mungkin sudah saatnya ngobrol dengan profesional (psikolog/terapis) ya. <i>It's okay to ask for help!</i></p>
         </div>
         <button class="choice-btn" onclick="location.reload()" style="background-color: #4ecdc4; color: white; width: 100%; margin-top: 20px; text-align: center;">Coba Lagi / Mulai Ulang</button>
     </div>
@@ -167,9 +173,8 @@
         { text: "Hampir setiap hari", score: 3 }
     ];
 
-    // --- PERTANYAN (TOTAL 20 - SEMUA JALUR MENGGUNAKAN .jpeg) ---
+    // --- PERTANYAN (SEMUA JALUR MENGGUNAKAN .jpeg) ---
     const questions = [
-        // Pastikan file .jpeg kamu ada di folder 'images/'
         { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (gak ada harapan).", image: "./images/q1.jpeg" }, 
         { category: "Depresi", text: "Gak semangat atau gak menikmati hal-hal yang biasanya kamu suka.", image: "./images/q2.jpeg" },
         { category: "Depresi", text: "Merasa capek banget atau gak punya energi.", image: "./images/q3.jpeg" },
@@ -248,6 +253,14 @@
         questionTextElement.innerHTML = fullQuestionText;
         
         choicesContainer.innerHTML = ''; 
+        
+        // 🚨 TAMPILKAN KEMBALI KONTEN DENGAN EFEK FADE-IN (karena CSS transition sudah diatur)
+        questionTextElement.style.opacity = '1'; 
+        
+        // Memastikan gambar juga ditampilkan dengan fade-in jika tidak disembunyikan
+        if (questionImageElement.style.display !== 'none') {
+            questionImageElement.style.opacity = '1';
+        }
 
         answerScale.forEach((answer) => {
             const button = document.createElement('button');
@@ -270,22 +283,24 @@
         
         stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
         
-        // 1. KOSONGKAN PILIHAN JAWABAN SEMENTARA (FIX: menghilangkan teks 'memuat pertanyaan...')
+        // 1. SEMBUNYIKAN KONTEN LAMA (Memulai transisi fade-out)
         choicesContainer.innerHTML = ''; 
-
+        questionTextElement.style.opacity = '0'; 
+        questionImageElement.style.opacity = '0';
+        
         // 2. TANGANI GAMBAR
         if (step.image) {
             questionImageElement.src = step.image;
             questionImageElement.style.display = 'block';
             
-            // TUNGGU GAMBAR SELESAI DI-LOAD sebelum menampilkan konten (FIX: gambar dan teks muncul bersamaan)
+            // TUNGGU GAMBAR SELESAI DI-LOAD
             questionImageElement.onload = () => {
                 displayQuestionContent(step);
             };
             // Penanganan jika gambar gagal di-load
             questionImageElement.onerror = () => {
                 console.error("Gagal memuat gambar:", step.image);
-                displayQuestionContent(step); // Tetap tampilkan teks pertanyaan
+                displayQuestionContent(step); 
             };
         } else {
             questionImageElement.style.display = 'none';
@@ -302,7 +317,7 @@
         // Simpan skor sebelum jeda
         scores[category] += score;
         
-        // 2. Beri jeda 200 milidetik (0.2 detik) untuk konfirmasi klik (FIX: delay lebih cepat)
+        // 2. Beri jeda 400 milidetik (0.4 detik) untuk konfirmasi klik (FIX: delay lebih halus)
         setTimeout(() => {
             
             // Hapus kelas 'clicked' dari semua tombol
@@ -313,7 +328,7 @@
             // 3. Lanjutkan ke langkah berikutnya
             currentStep++; 
             loadStep();
-        },400 ); // Jeda 200 milidetik (0.2 detik)
+        }, 400); // Jeda 400 milidetik (0.4 detik)
     }
     
     function getInterpretation(category, totalScore) {
@@ -329,7 +344,6 @@
         quizScreen.style.display = 'none';
         resultScreen.style.display = 'block';
         
-        // Sembunyikan gambar di layar hasil
         questionImageElement.style.display = 'none'; 
         
         scoreSummaryElement.innerHTML = '';
