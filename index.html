@@ -46,7 +46,7 @@
             padding: 10px;
             border-left: 5px solid #4ecdc4; /* Warna border baru */
         }
-        /* BARU: Style untuk Gambar Pertanyaan */
+        /* Style untuk Gambar Pertanyaan */
         #question-image {
             width: 100%; 
             max-width: 400px; 
@@ -67,7 +67,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1em;
-            transition: background-color 0.15s, border-color 0.15s; /* Transisi dipercepat untuk responsif */
+            transition: background-color 0.15s, border-color 0.15s;
             text-align: left;
         }
         .choice-btn:hover {
@@ -76,7 +76,7 @@
             color: #ff6b6b;
         }
 
-        /* BARU: Class untuk Konfirmasi Klik (UX Smartphone) */
+        /* Class untuk Konfirmasi Klik (UX Smartphone) */
         .choice-btn.clicked {
             background-color: #ff6b6b; /* Warna latar belakang berubah drastis saat diklik */
             color: white;             /* Teks menjadi putih agar kontras */
@@ -140,7 +140,7 @@
         <p id="question-text">Memuat pertanyaan...</p>
         
         <div id="choices-container">
-            </div>
+        </div>
     </div>
 
     <div id="result-screen">
@@ -148,7 +148,7 @@
         <p>Oke, ini dia ringkasan kebutuhan dukungan kamu berdasarkan 20 jawaban tadi:</p>
         
         <div id="score-summary">
-            </div>
+        </div>
 
         <div class="score-footer">
             <p>Penting: Kalau kamu dapat skor Sedang atau Tinggi di salah satu kategori, itu tandanya kamu butuh waktu istirahat lebih atau mungkin sudah saatnya ngobrol dengan profesional (psikolog/terapis) ya. <i>It's okay to ask for help!</i></p>
@@ -159,7 +159,7 @@
 </div>
 
 <script>
-    // --- SKALA JAWABAN (Sudah menggunakan 'gak') ---
+    // --- SKALA JAWABAN ---
     const answerScale = [
         { text: "Gak sama sekali (0 hari)", score: 0 },
         { text: "Beberapa hari aja", score: 1 },
@@ -167,49 +167,48 @@
         { text: "Hampir setiap hari", score: 3 }
     ];
 
-    // --- PERTANYAN (TOTAL 20 - Sudah Fix Asterisk & Siap Gambar) ---
+    // --- PERTANYAN (TOTAL 20 - SEMUA JALUR MENGGUNAKAN .jpeg) ---
     const questions = [
-        // CATATAN PENTING: GANTI "./images/qX.jpg" dengan path yang benar setelah kamu upload gambar ke GitHub!
-        { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (gak ada harapan).", image: "./images/q1.jpg" }, 
-        { category: "Depresi", text: "Gak semangat atau gak menikmati hal-hal yang biasanya kamu suka.", image: "./images/q2.jpg" },
-        { category: "Depresi", text: "Merasa capek banget atau gak punya energi.", image: "./images/q3.jpg" },
-        { category: "Depresi", text: "Mengalami masalah tidur (susah tidur, tidur kebanyakan, atau sering bangun).", image: "./images/q4.jpg" },
-        { category: "Depresi", text: "Merasa kamu itu gagal, mengecewakan diri sendiri atau orang lain.", image: "./images/q5.jpg" },
+        // Pastikan file .jpeg kamu ada di folder 'images/'
+        { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (gak ada harapan).", image: "./images/q1.jpeg" }, 
+        { category: "Depresi", text: "Gak semangat atau gak menikmati hal-hal yang biasanya kamu suka.", image: "./images/q2.jpeg" },
+        { category: "Depresi", text: "Merasa capek banget atau gak punya energi.", image: "./images/q3.jpeg" },
+        { category: "Depresi", text: "Mengalami masalah tidur (susah tidur, tidur kebanyakan, atau sering bangun).", image: "./images/q4.jpeg" },
+        { category: "Depresi", text: "Merasa kamu itu gagal, mengecewakan diri sendiri atau orang lain.", image: "./images/q5.jpeg" },
         
-        { category: "Kecemasan", text: "Merasa gugup, cemas, atau tegang berlebihan tanpa alasan jelas.", image: "./images/q6.jpg" },
-        { category: "Kecemasan", text: "Gak bisa berhenti atau mengontrol pikiran yang bikin khawatir (<em>overthinking</em>).", image: "./images/q7.jpg" },
-        { category: "Kecemasan", text: "Terlalu khawatir tentang banyak hal (sekolah, kerjaan, uang, dll.).", image: "./images/q8.jpg" },
-        { category: "Kecemasan", text: "Sulit banget buat santai atau merasa gak tenang.", image: "./images/q9.jpg" },
-        { category: "Kecemasan", text: "Gampang banget marah atau terganggu (sensitif).", image: "./images/q10.jpg" },
+        { category: "Kecemasan", text: "Merasa gugup, cemas, atau tegang berlebihan tanpa alasan jelas.", image: "./images/q6.jpeg" },
+        { category: "Kecemasan", text: "Gak bisa berhenti atau mengontrol pikiran yang bikin khawatir (<em>overthinking</em>).", image: "./images/q7.jpeg" },
+        { category: "Kecemasan", text: "Terlalu khawatir tentang banyak hal (sekolah, kerjaan, uang, dll.).", image: "./images/q8.jpeg" },
+        { category: "Kecemasan", text: "Sulit banget buat santai atau merasa gak tenang.", image: "./images/q9.jpeg" },
+        { category: "Kecemasan", text: "Gampang banget marah atau terganggu (sensitif).", image: "./images/q10.jpeg" },
 
-        { category: "Stres", text: "Merasa tertekan sama hal-hal yang terjadi mendadak atau di luar rencana?", image: "./images/q11.jpg" },
-        { category: "Stres", text: "Merasa kamu gak sanggup nanganin semua tugas/tanggung jawab kamu?", image: "./images/q12.jpg" },
-        { category: "Stres", text: "Merasa marah atau kesal karena ada hal-hal yang gak bisa kamu kontrol?", image: "./images/q13.jpg" },
-        { category: "Stres", text: "Merasa <strong>KESULITAN</strong> banget ngontrol gimana kamu pakai waktu kamu?", image: "./images/q14.jpg" }, 
-        { category: "Stres", text: "Merasa susah banget buat ngendalikan hal-hal yang bikin kamu iritasi di hidup kamu?", image: "./images/q15.jpg" },
+        { category: "Stres", text: "Merasa tertekan sama hal-hal yang terjadi mendadak atau di luar rencana?", image: "./images/q11.jpeg" },
+        { category: "Stres", text: "Merasa kamu gak sanggup nanganin semua tugas/tanggung jawab kamu?", image: "./images/q12.jpeg" },
+        { category: "Stres", text: "Merasa marah atau kesal karena ada hal-hal yang gak bisa kamu kontrol?", image: "./images/q13.jpeg" },
+        { category: "Stres", text: "Merasa <strong>KESULITAN</strong> banget ngontrol gimana kamu pakai waktu kamu?", image: "./images/q14.jpeg" }, 
+        { category: "Stres", text: "Merasa susah banget buat ngendalikan hal-hal yang bikin kamu iritasi di hidup kamu?", image: "./images/q15.jpeg" },
 
-        { category: "Kelelahan", text: "Merasa terkuras fisik dan emosional di akhir hari/aktivitas (habis energi)?", image: "./images/q16.jpg" },
-        { category: "Kelelahan", text: "Merasa sinis atau gak peduli sama kerjaan/aktivitas harian kamu?", image: "./images/q17.jpg" },
-        { category: "Kelelahan", text: "Merasa kemampuan atau efektivitas kamu menurun drastis?", image: "./images/q18.jpg" },
-        { category: "Kelelahan", text: "Cenderung ngejauhin diri dari teman/rekan kerja dan cuma mau sendirian?", image: "./images/q19.jpg" },
-        { category: "Kelelahan", text: "Merasa usaha kamu gak dihargai atau gak ada artinya?", image: "./images/q20.jpg" }
+        { category: "Kelelahan", text: "Merasa terkuras fisik dan emosional di akhir hari/aktivitas (habis energi)?", image: "./images/q16.jpeg" },
+        { category: "Kelelahan", text: "Merasa sinis atau gak peduli sama kerjaan/aktivitas harian kamu?", image: "./images/q17.jpeg" },
+        { category: "Kelelahan", text: "Merasa kemampuan atau efektivitas kamu menurun drastis?", image: "./images/q18.jpeg" },
+        { category: "Kelelahan", text: "Cenderung ngejauhin diri dari teman/rekan kerja dan cuma mau sendirian?", image: "./images/q19.jpeg" },
+        { category: "Kelelahan", text: "Merasa usaha kamu gak dihargai atau gak ada artinya?", image: "./images/q20.jpeg" }
     ];
 
     // --- INTERPRETASI SKOR ---
     const interpretation = {
-        // ... (Aturan skor tetap sama)
         Depresi: [
             { threshold: 10, label: "Tinggi", class: "high", recommendation: "Ada kemungkinan gejala Depresi cukup kuat. Jangan tunda, segera cari bantuan profesional untuk evaluasi lebih lanjut." },
-            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Gejala suasana hati cukup terasa. Prioritaskan *self-care* dan cari tahu apa yang memicu perasaan ini. Ngobrol sama teman supportif bisa bantu." },
+            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Gejala suasana hati cukup terasa. Prioritaskan <i>self-care</i> dan cari tahu apa yang memicu perasaan ini. Ngobrol sama teman supportif bisa bantu." },
             { threshold: 0, label: "Rendah", class: "low", recommendation: "Mood kamu aman terkendali. Lanjutkan kebiasaan baikmu!" }
         ],
         Kecemasan: [
             { threshold: 10, label: "Tinggi", class: "high", recommendation: "Tingkat Kecemasanmu tinggi dan mengganggu aktivitas. Penting banget untuk belajar teknik relaksasi dan pertimbangkan untuk konsultasi." },
-            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Kekhawatiranmu cukup menguras energi. Coba batasi sumber stres (sosial media, berita) dan fokus pada *mindfulness*." },
+            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Kekhawatiranmu cukup menguras energi. Coba batasi sumber stres (sosial media, berita) dan fokus pada <i>mindfulness</i>." },
             { threshold: 0, label: "Rendah", class: "low", recommendation: "Kamu termasuk orang yang tenang dan gak gampang panik. Nice!" }
         ],
         Stres: [
-            { threshold: 10, label: "Tinggi", class: "high", recommendation: "Stresmu sudah di level bahaya! Kamu perlu evaluasi ulang batas (*boundary*) dan beban kerja/hidupmu. Istirahat jadi prioritas utama." },
+            { threshold: 10, label: "Tinggi", class: "high", recommendation: "Stresmu sudah di level bahaya! Kamu perlu evaluasi ulang batas (<i>boundary</i>) dan beban kerja/hidupmu. Istirahat jadi prioritas utama." },
             { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Tekanan hidup terasa, tapi masih bisa diatasi. Coba atur jadwal, delegasikan tugas, dan jangan lupa me time." },
             { threshold: 0, label: "Rendah", class: "low", recommendation: "Stres terkendali! Kamu pintar mengatur hidup dan prioritas." }
         ],
@@ -228,7 +227,7 @@
     const startButton = document.getElementById('start-button');
     const quizScreen = document.getElementById('quiz-screen');
     const questionTextElement = document.getElementById('question-text');
-    const questionImageElement = document.getElementById('question-image'); // BARU: Deklarasi Gambar
+    const questionImageElement = document.getElementById('question-image'); 
     const choicesContainer = document.getElementById('choices-container');
     const stepCounterElement = document.getElementById('step-counter');
     const resultScreen = document.getElementById('result-screen');
@@ -252,7 +251,7 @@
         
         stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
         
-        // BARU: Set URL Gambar dan tampilkan
+        // Set URL Gambar dan tampilkan (jika ada)
         if (step.image) {
             questionImageElement.src = step.image;
             questionImageElement.style.display = 'block';
@@ -278,7 +277,7 @@
         });
     }
 
-    // Perubahan: Fungsi sekarang menerima elemen tombol (buttonElement)
+    // Fungsi sekarang menerima elemen tombol (buttonElement) untuk efek klik
     function chooseChoice(score, category, buttonElement) {
         // 1. Terapkan kelas 'clicked' ke tombol yang baru diklik (perubahan warna)
         buttonElement.classList.add('clicked');
@@ -289,7 +288,7 @@
         // 2. Beri jeda 300 milidetik (0.3 detik) agar pengguna melihat perubahan warna
         setTimeout(() => {
             
-            // Hapus kelas 'clicked' dari semua tombol untuk membersihkan tampilan
+            // Hapus kelas 'clicked' dari semua tombol
             document.querySelectorAll('.choice-btn').forEach(btn => {
                 btn.classList.remove('clicked');
             });
@@ -312,6 +311,9 @@
     function showFinalResult() {
         quizScreen.style.display = 'none';
         resultScreen.style.display = 'block';
+        
+        // Sembunyikan gambar di layar hasil
+        questionImageElement.style.display = 'none'; 
         
         scoreSummaryElement.innerHTML = '';
 
