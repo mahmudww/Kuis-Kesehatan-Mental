@@ -270,15 +270,15 @@
         
         stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
         
-        // 1. KOSONGKAN PILIHAN JAWABAN SEMENTARA
-        choicesContainer.innerHTML = 'Memuat pertanyaan selanjutnya...'; 
+        // 1. KOSONGKAN PILIHAN JAWABAN SEMENTARA (FIX: menghilangkan teks 'memuat pertanyaan...')
+        choicesContainer.innerHTML = ''; 
 
         // 2. TANGANI GAMBAR
         if (step.image) {
             questionImageElement.src = step.image;
             questionImageElement.style.display = 'block';
             
-            // TUNGGU GAMBAR SELESAI DI-LOAD sebelum menampilkan konten
+            // TUNGGU GAMBAR SELESAI DI-LOAD sebelum menampilkan konten (FIX: gambar dan teks muncul bersamaan)
             questionImageElement.onload = () => {
                 displayQuestionContent(step);
             };
@@ -302,7 +302,7 @@
         // Simpan skor sebelum jeda
         scores[category] += score;
         
-        // 2. Beri jeda 300 milidetik (0.3 detik) agar pengguna melihat perubahan warna
+        // 2. Beri jeda 200 milidetik (0.2 detik) untuk konfirmasi klik (FIX: delay lebih cepat)
         setTimeout(() => {
             
             // Hapus kelas 'clicked' dari semua tombol
@@ -313,7 +313,7 @@
             // 3. Lanjutkan ke langkah berikutnya
             currentStep++; 
             loadStep();
-        }, 300); // Jeda 300 milidetik (0.3 detik)
+        }, 200); // Jeda 200 milidetik (0.2 detik)
     }
     
     function getInterpretation(category, totalScore) {
