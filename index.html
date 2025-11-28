@@ -49,11 +49,11 @@
         /* Style untuk Gambar Pertanyaan */
         #question-image {
             width: 100%; 
-            max-width: 400px; 
+            max-width: 400px; /* Batasan Lebar Maksimum */
             height: auto; 
-            margin-bottom: 20px; 
+            margin: 0 auto 20px auto; /* BARU: Memberi Margin Atas/Bawah dan Auto Kiri/Kanan */
+            display: block; /* PENTING: Mengubahnya menjadi block agar margin auto bekerja */
             border-radius: 8px;
-            display: none; /* Disembunyikan dulu sampai JS memuatnya */
         }
 
         .choice-btn {
