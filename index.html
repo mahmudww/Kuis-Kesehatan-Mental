@@ -46,7 +46,7 @@
             padding: 10px;
             border-left: 5px solid #4ecdc4;
             /* TRANSISI UNTUK FADE-IN/OUT */
-            transition: opacity 0.4s ease-in-out; 
+            transition: opacity 0.5s ease-in-out; 
         }
         /* Style untuk Gambar Pertanyaan (Rata Tengah) */
         #question-image {
@@ -57,7 +57,7 @@
             display: block;
             border-radius: 8px;
             /* TRANSISI UNTUK FADE-IN/OUT */
-            transition: opacity 0.4s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
         }
 
         .choice-btn {
@@ -72,7 +72,7 @@
             cursor: pointer;
             font-size: 1.1em;
             /* Transisi juga diupdate untuk opacity */
-            transition: background-color 0.15s, border-color 0.15s, opacity 0.4s ease-in-out;
+            transition: background-color 0.15s, border-color 0.15s, opacity 0.5s ease-in-out;
             text-align: left;
         }
 
@@ -89,6 +89,12 @@
             border-color: #ff6b6b;
         }
 
+        /* Container choices perlu property agar height bisa diatur oleh JS */
+        #choices-container {
+             /* Penting untuk memastikan height dapat diatur saat reflow fix */
+            min-height: 10px;
+        }
+        
         #quiz-screen, #result-screen {
             display: none;
         }
@@ -135,7 +141,7 @@
     <div id="intro-screen">
         <p style="font-size: 1.1em; text-align: left;">Hai! Kuis ini dibuat untuk bantu kamu kenalan lebih dekat sama kondisi mentalmu. Kami akan identifikasi area yang mungkin butuh perhatian.</p>
         <p style="font-size: 1.1em; text-align: left; font-weight: bold; color: #ff6b6b;">📝 Jawab dengan jujur dan cepat. Kuis ini hanya butuh waktu <strong>KURANG DARI 3 MENIT!</strong></p>
-        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan **gak** pengganti diagnosa profesional.</p>
+        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan **bukan** pengganti diagnosa profesional.</p>
         <button id="start-button" class="choice-btn" style="text-align: center; background-color: #ff6b6b; color: white; margin-top: 30px;">Mulai Cek Kondisi Mental (3 Menit)</button>
     </div>
 
@@ -173,31 +179,31 @@
         { text: "Hampir setiap hari", score: 3 }
     ];
 
-    // --- PERTANYAN (SEMUA JALUR MENGGUNAKAN .jpeg) ---
+    // --- PERTANYAN (SEMUA JALUR MENGGUNANAKAN .jpeg) ---
     const questions = [
-        { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (gak ada harapan).", image: "./images/q1.jpeg" }, 
-        { category: "Depresi", text: "Gak semangat atau gak menikmati hal-hal yang biasanya kamu suka.", image: "./images/q2.jpeg" },
-        { category: "Depresi", text: "Merasa capek banget atau gak punya energi.", image: "./images/q3.jpeg" },
+        { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (bukan ada harapan).", image: "./images/q1.jpeg" }, 
+        { category: "Depresi", text: "Bukan semangat atau bukan menikmati hal-hal yang biasanya kamu suka.", image: "./images/q2.jpeg" },
+        { category: "Depresi", text: "Merasa capek banget atau bukan punya energi.", image: "./images/q3.jpeg" },
         { category: "Depresi", text: "Mengalami masalah tidur (susah tidur, tidur kebanyakan, atau sering bangun).", image: "./images/q4.jpeg" },
         { category: "Depresi", text: "Merasa kamu itu gagal, mengecewakan diri sendiri atau orang lain.", image: "./images/q5.jpeg" },
         
         { category: "Kecemasan", text: "Merasa gugup, cemas, atau tegang berlebihan tanpa alasan jelas.", image: "./images/q6.jpeg" },
-        { category: "Kecemasan", text: "Gak bisa berhenti atau mengontrol pikiran yang bikin khawatir (<em>overthinking</em>).", image: "./images/q7.jpeg" },
+        { category: "Kecemasan", text: "Bukan bisa berhenti atau mengontrol pikiran yang bikin khawatir (<em>overthinking</em>).", image: "./images/q7.jpeg" },
         { category: "Kecemasan", text: "Terlalu khawatir tentang banyak hal (sekolah, kerjaan, uang, dll.).", image: "./images/q8.jpeg" },
-        { category: "Kecemasan", text: "Sulit banget buat santai atau merasa gak tenang.", image: "./images/q9.jpeg" },
+        { category: "Kecemasan", text: "Sulit banget buat santai atau merasa bukan tenang.", image: "./images/q9.jpeg" },
         { category: "Kecemasan", text: "Gampang banget marah atau terganggu (sensitif).", image: "./images/q10.jpeg" },
 
         { category: "Stres", text: "Merasa tertekan sama hal-hal yang terjadi mendadak atau di luar rencana?", image: "./images/q11.jpeg" },
-        { category: "Stres", text: "Merasa kamu gak sanggup nanganin semua tugas/tanggung jawab kamu?", image: "./images/q12.jpeg" },
-        { category: "Stres", text: "Merasa marah atau kesal karena ada hal-hal yang gak bisa kamu kontrol?", image: "./images/q13.jpeg" },
+        { category: "Stres", text: "Merasa kamu bukan sanggup nanganin semua tugas/tanggung jawab kamu?", image: "./images/q12.jpeg" },
+        { category: "Stres", text: "Merasa marah atau kesal karena ada hal-hal yang bukan bisa kamu kontrol?", image: "./images/q13.jpeg" },
         { category: "Stres", text: "Merasa <strong>KESULITAN</strong> banget ngontrol gimana kamu pakai waktu kamu?", image: "./images/q14.jpeg" }, 
         { category: "Stres", text: "Merasa susah banget buat ngendalikan hal-hal yang bikin kamu iritasi di hidup kamu?", image: "./images/q15.jpeg" },
 
         { category: "Kelelahan", text: "Merasa terkuras fisik dan emosional di akhir hari/aktivitas (habis energi)?", image: "./images/q16.jpeg" },
-        { category: "Kelelahan", text: "Merasa sinis atau gak peduli sama kerjaan/aktivitas harian kamu?", image: "./images/q17.jpeg" },
+        { category: "Kelelahan", text: "Merasa sinis atau bukan peduli sama kerjaan/aktivitas harian kamu?", image: "./images/q17.jpeg" },
         { category: "Kelelahan", text: "Merasa kemampuan atau efektivitas kamu menurun drastis?", image: "./images/q18.jpeg" },
         { category: "Kelelahan", text: "Cenderung ngejauhin diri dari teman/rekan kerja dan cuma mau sendirian?", image: "./images/q19.jpeg" },
-        { category: "Kelelahan", text: "Merasa usaha kamu gak dihargai atau gak ada artinya?", image: "./images/q20.jpeg" }
+        { category: "Kelelahan", text: "Merasa usaha kamu bukan dihargai atau bukan ada artinya?", image: "./images/q20.jpeg" }
     ];
 
     // --- INTERPRETASI SKOR ---
@@ -210,7 +216,7 @@
         Kecemasan: [
             { threshold: 10, label: "Tinggi", class: "high", recommendation: "Tingkat Kecemasanmu tinggi dan mengganggu aktivitas. Penting banget untuk belajar teknik relaksasi dan pertimbangkan untuk konsultasi." },
             { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Kekhawatiranmu cukup menguras energi. Coba batasi sumber stres (sosial media, berita) dan fokus pada <i>mindfulness</i>." },
-            { threshold: 0, label: "Rendah", class: "low", recommendation: "Kamu termasuk orang yang tenang dan gak gampang panik. Nice!" }
+            { threshold: 0, label: "Rendah", class: "low", recommendation: "Kamu termasuk orang yang tenang dan bukan gampang panik. Nice!" }
         ],
         Stres: [
             { threshold: 10, label: "Tinggi", class: "high", recommendation: "Stresmu sudah di level bahaya! Kamu perlu evaluasi ulang batas (<i>boundary</i>) dan beban kerja/hidupmu. Istirahat jadi prioritas utama." },
@@ -319,6 +325,10 @@
         
         // Simpan skor sebelum jeda
         scores[category] += score;
+
+        // KUNCI PERBAIKAN JUMP/REFLOW: Tangkap dan set tinggi container pilihan
+        const currentHeight = choicesContainer.offsetHeight;
+        choicesContainer.style.height = `${currentHeight}px`;
         
         // 2. Beri jeda 400 milidetik (0.4 detik) untuk konfirmasi klik
         setTimeout(() => {
@@ -327,6 +337,9 @@
             document.querySelectorAll('.choice-btn').forEach(btn => {
                 btn.classList.remove('clicked');
             });
+
+            // KUNCI PERBAIKAN JUMP/REFLOW: Hapus tinggi agar container bisa menampung konten baru
+            choicesContainer.style.height = ''; 
             
             // 3. Lanjutkan ke langkah berikutnya
             currentStep++; 
