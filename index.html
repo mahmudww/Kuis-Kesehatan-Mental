@@ -16,14 +16,13 @@
             position: relative; 
         }
 
-        /* 🚨 BARU: Kunci Layar saat Transisi untuk Mencegah Scroll Jump */
+        /* 🚨 Kunci Layar saat Transisi untuk Mencegah Scroll Jump */
         .scroll-lock {
             overflow: hidden;
             position: fixed;
             width: 100%;
             top: 0;
             left: 0;
-            /* Tambahan: Pastikan konten utama tidak terpengaruh z-index aneh */
             z-index: 9999; 
         }
         
@@ -62,6 +61,7 @@
             text-align: left;
             padding: 10px;
             border-left: 5px solid #4ecdc4;
+            /* Transisi 0.5s */
             transition: opacity 0.5s ease-in-out; 
         }
         /* Style untuk Gambar Pertanyaan (Rata Tengah) */
@@ -72,6 +72,7 @@
             margin: 0 auto 20px auto;
             display: block;
             border-radius: 8px;
+            /* Transisi 0.5s */
             transition: opacity 0.5s ease-in-out;
         }
 
@@ -141,7 +142,7 @@
     <div id="intro-screen">
         <p style="font-size: 1.1em; text-align: left;">Hai! Kuis ini dibuat untuk bantu kamu kenalan lebih dekat sama kondisi mentalmu. Kami akan identifikasi area yang mungkin butuh perhatian.</p>
         <p style="font-size: 1.1em; text-align: left; font-weight: bold; color: #ff6b6b;">📝 Jawab dengan jujur dan cepat. Kuis ini hanya butuh waktu <strong>KURANG DARI 3 MENIT!</strong></p>
-        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan **bukan** pengganti diagnosa profesional.</p>
+        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan bukan pengganti diagnosa profesional.</p>
         <button id="start-button" class="choice-btn" style="text-align: center; background-color: #ff6b6b; color: white; margin-top: 30px;">Mulai Cek Kondisi Mental (3 Menit)</button>
     </div>
 
@@ -335,7 +336,11 @@
         document.body.classList.add('scroll-lock'); // Kunci body (position:fixed)
         document.body.style.top = `-${scrollPosition}px`; // Pertahankan posisi visual
         
-        // 2. Beri jeda 400 milidetik (0.4 detik) untuk konfirmasi klik
+        // 🚨 KUNCI PERBAIKAN FLICKERING: Paksa Fade Out di detik ke-0
+        questionTextElement.style.opacity = '0';
+        questionImageElement.style.opacity = '0';
+
+        // 2. Beri total jeda 900ms (0.4s click feedback + 0.5s fade-out time)
         setTimeout(() => {
             
             // Hapus kelas 'clicked' dari semua tombol
@@ -354,7 +359,7 @@
             // 3. Lanjutkan ke langkah berikutnya
             currentStep++; 
             loadStep();
-        }, 400); // Jeda 400 milidetik (0.4 detik)
+        }, 900); // Jeda total 900 milidetik (0.9 detik)
     }
     
     function getInterpretation(category, totalScore) {
