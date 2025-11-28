@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Kesejahteraan Mental Diri: Cepat & Akurat</title>
+    <style>
+        /* CSS untuk Kuis Serius */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7; 
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .quiz-container {
+            width: 90%;
+            max-width: 650px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #ff6b6b; /* Warna lebih ceria/relatable */
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        #step-counter {
+            font-size: 1em;
+            text-align: right;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        #question-text {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px;
+            border-left: 5px solid #4ecdc4; /* Warna border baru */
+        }
+        .choice-btn {
+            display: block;
+            width: 100%; 
+            padding: 15px;
+            margin-bottom: 12px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s, border-color 0.3s;
+            text-align: left;
+        }
+        .choice-btn:hover {
+            background-color: #e9ecef;
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        #quiz-screen, #result-screen {
+            display: none;
+        }
+        #result-screen h2 {
+            color: #28a745;
+            margin-top: 0;
+        }
+        #score-summary {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .score-item {
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 4px solid;
+            font-size: 1.1em;
+            background-color: #f8f9fa;
+        }
+        .score-item strong {
+            display: inline-block;
+            min-width: 150px;
+        }
+
+        /* Warna Border untuk Interpretasi */
+        .low { border-left-color: #28a745; }    /* Hijau */
+        .moderate { border-left-color: #ffc107; } /* Kuning */
+        .high { border-left-color: #dc3545; }    /* Merah */
+        
+        .score-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            text-align: left;
+            font-size: 0.95em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>🌱 Cek Kesejahteraan Mental Diri: Kamu Butuh Bantuan?</h1>
+
+    <div id="intro-screen">
+        <p style="font-size: 1.1em; text-align: left;">Hai! Kuis ini dibuat untuk bantu kamu kenalan lebih dekat sama kondisi mentalmu. Kami akan identifikasi area yang mungkin butuh perhatian.</p>
+        <p style="font-size: 1.1em; text-align: left; font-weight: bold; color: #ff6b6b;">📝 Jawab dengan jujur dan cepat. Kuis ini hanya butuh waktu <strong>KURANG DARI 3 MENIT!</strong></p>
+        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan bukan pengganti diagnosa profesional.</p>
+        <button id="start-button" class="choice-btn" style="text-align: center; background-color: #ff6b6b; color: white; margin-top: 30px;">Mulai Cek Kondisi Mental (3 Menit)</button>
+    </div>
+
+    <div id="quiz-screen">
+        <p id="step-counter">...</p>
+        <p id="question-text">Memuat pertanyaan...</p>
+        
+        <div id="choices-container">
+            </div>
+    </div>
+
+    <div id="result-screen">
+        <h2>✨ Hasil Cek Profil Kamu</h2>
+        <p>Oke, ini dia ringkasan kebutuhan dukungan kamu berdasarkan 20 jawaban tadi:</p>
+        
+        <div id="score-summary">
+            </div>
+
+        <div class="score-footer">
+            <p>Penting: Kalau kamu dapat skor Sedang atau Tinggi di salah satu kategori, itu tandanya kamu butuh waktu istirahat lebih atau mungkin sudah saatnya ngobrol dengan profesional (psikolog/terapis) ya. <i>It's okay to ask for help!</i></p>
+        </div>
+        <button class="choice-btn" onclick="location.reload()" style="background-color: #ff6b6b; color: white; width: 100%; margin-top: 20px; text-align: center;">Coba Lagi / Mulai Ulang</button>
+    </div>
+
+</div>
+
+<script>
+    // --- SKALA JAWABAN ---
+    const answerScale = [
+        { text: "Gak sama sekali (0 hari)", score: 0 },
+        { text: "Beberapa hari aja", score: 1 },
+        { text: "7 hari atau lebih", score: 2 },
+        { text: "Hampir setiap hari", score: 3 }
+    ];
+
+    // --- PERTANYAN (TOTAL 20) ---
+    const questions = [
+        // --- SEGMENT 1: DEPRESI & MOOD (Q1-Q5) ---
+        { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (gak ada harapan)." },
+        { category: "Depresi", text: "Gak semangat atau gak menikmati hal-hal yang biasanya kamu suka." },
+        { category: "Depresi", text: "Merasa capek banget atau gak punya energi." },
+        { category: "Depresi", text: "Mengalami masalah tidur (susah tidur, tidur kebanyakan, atau sering bangun)." },
+        { category: "Depresi", text: "Merasa kamu itu gagal, mengecewakan diri sendiri atau orang lain." },
+        
+        // --- SEGMENT 2: KECEMASAN (Q6-Q10) ---
+        { category: "Kecemasan", text: "Merasa gugup, cemas, atau tegang berlebihan tanpa alasan jelas." },
+        { category: "Kecemasan", text: "Gak bisa berhenti atau mengontrol pikiran yang bikin khawatir (<em>overthinking</em>)." },
+        { category: "Kecemasan", text: "Terlalu khawatir tentang banyak hal (sekolah, kerjaan, uang, dll.)." },
+        { category: "Kecemasan", text: "Sulit banget buat santai atau merasa gak tenang." },
+        { category: "Kecemasan", text: "Gampang banget marah atau terganggu (sensitif)." },
+
+        // --- SEGMENT 3: STRES & TEKANAN (Q11-Q15) ---
+        { category: "Stres", text: "Merasa tertekan sama hal-hal yang terjadi mendadak atau di luar rencana?" },
+        { category: "Stres", text: "Merasa kamu gak sanggup nanganin semua tugas/tanggung jawab kamu?" },
+        { category: "Stres", text: "Merasa marah atau kesal karena ada hal-hal yang gak bisa kamu kontrol?" },
+        { category: "Stres", text: "Merasa <strong>KESULITAN</strong> banget ngontrol gimana kamu pakai waktu kamu?" }, 
+        { category: "Stres", text: "Merasa susah banget buat ngendalikan hal-hal yang bikin kamu iritasi di hidup kamu?" },
+
+        // --- SEGMENT 4: KELELAHAN/BURNOUT (Q16-Q20) ---
+        { category: "Kelelahan", text: "Merasa terkuras fisik dan emosional di akhir hari/aktivitas (habis energi)?" },
+        { category: "Kelelahan", text: "Merasa sinis atau gak peduli sama kerjaan/aktivitas harian kamu?" },
+        { category: "Kelelahan", text: "Merasa kemampuan atau efektivitas kamu menurun drastis?" },
+        { category: "Kelelahan", text: "Cenderung ngejauhin diri dari teman/rekan kerja dan cuma mau sendirian?" },
+        { category: "Kelelahan", text: "Merasa usaha kamu gak dihargai atau gak ada artinya?" }
+    ];
+
+    // --- INTERPRETASI SKOR ---
+    const interpretation = {
+        Depresi: [
+            { threshold: 10, label: "Tinggi", class: "high", recommendation: "Ada kemungkinan gejala Depresi cukup kuat. Jangan tunda, segera cari bantuan profesional untuk evaluasi lebih lanjut." },
+            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Gejala suasana hati cukup terasa. Prioritaskan *self-care* dan cari tahu apa yang memicu perasaan ini. Ngobrol sama teman supportif bisa bantu." },
+            { threshold: 0, label: "Rendah", class: "low", recommendation: "Mood kamu aman terkendali. Lanjutkan kebiasaan baikmu!" }
+        ],
+        Kecemasan: [
+            { threshold: 10, label: "Tinggi", class: "high", recommendation: "Tingkat Kecemasanmu tinggi dan mengganggu aktivitas. Penting banget untuk belajar teknik relaksasi dan pertimbangkan untuk konsultasi." },
+            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Kekhawatiranmu cukup menguras energi. Coba batasi sumber stres (sosial media, berita) dan fokus pada *mindfulness*." },
+            { threshold: 0, label: "Rendah", class: "low", recommendation: "Kamu termasuk orang yang tenang dan gak gampang panik. Nice!" }
+        ],
+        Stres: [
+            { threshold: 10, label: "Tinggi", class: "high", recommendation: "Stresmu sudah di level bahaya! Kamu perlu evaluasi ulang batas (*boundary*) dan beban kerja/hidupmu. Istirahat jadi prioritas utama." },
+            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Tekanan hidup terasa, tapi masih bisa diatasi. Coba atur jadwal, delegasikan tugas, dan jangan lupa me time." },
+            { threshold: 0, label: "Rendah", class: "low", recommendation: "Stres terkendali! Kamu pintar mengatur hidup dan prioritas." }
+        ],
+         Kelelahan: [
+            { threshold: 10, label: "Tinggi", class: "high", recommendation: "Ini bisa jadi tanda Burnout serius. Istirahat total, ambil cuti, dan bicarakan ini dengan atasan/orang terdekat. Jangan paksakan diri." },
+            { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Ada kelelahan emosional yang menumpuk. Coba ganti rutinitas, temukan kembali tujuanmu, dan tetapkan batasan waktu kerja yang lebih jelas." },
+            { threshold: 0, label: "Rendah", class: "low", recommendation: "Motivasi dan energimu bagus! Pertahankan keseimbangan hidupmu." }
+        ]
+    };
+
+    let currentStep = 0;
+    let scores = { Depresi: 0, Kecemasan: 0, Stres: 0, Kelelahan: 0 };
+    
+    // Elemen DOM
+    const introScreen = document.getElementById('intro-screen');
+    const startButton = document.getElementById('start-button');
+    const quizScreen = document.getElementById('quiz-screen');
+    const questionTextElement = document.getElementById('question-text');
+    const choicesContainer = document.getElementById('choices-container');
+    const stepCounterElement = document.getElementById('step-counter');
+    const resultScreen = document.getElementById('result-screen');
+    const scoreSummaryElement = document.getElementById('score-summary');
+
+    // --- FUNGSI UTAMA ---
+
+    function startQuiz() {
+        introScreen.style.display = 'none';
+        quizScreen.style.display = 'block';
+        loadStep();
+    }
+
+    function loadStep() {
+        if (currentStep >= questions.length) {
+            showFinalResult();
+            return;
+        }
+        
+        const step = questions[currentStep];
+        
+        stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
+        
+        // Gabungkan kerangka waktu dan pertanyaan untuk kejelasan.
+        const fullQuestionText = `Dalam <strong>dua minggu terakhir</strong>, seberapa sering kamu terganggu oleh hal ini: <strong>${step.text}</strong>`;
+        questionTextElement.innerHTML = fullQuestionText; 
+        
+        choicesContainer.innerHTML = ''; 
+
+        answerScale.forEach((answer) => {
+            const button = document.createElement('button');
+            button.className = 'choice-btn';
+            button.textContent = answer.text;
+            button.onclick = () => chooseChoice(answer.score, step.category); 
+            choicesContainer.appendChild(button);
+        });
+    }
+
+    function chooseChoice(score, category) {
+        // Logika skoring langsung (tanpa reverse scoring)
+        scores[category] += score;
+        
+        currentStep++; 
+        loadStep();    
+    }
+    
+    function getInterpretation(category, totalScore) {
+        const rules = interpretation[category];
+        for (const rule of rules) {
+            if (totalScore >= rule.threshold) {
+                return rule;
+            }
+        }
+    }
+
+    function showFinalResult() {
+        quizScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        
+        scoreSummaryElement.innerHTML = '';
+
+        for (const category in scores) {
+            const totalScore = scores[category];
+            const interpretationData = getInterpretation(category, totalScore);
+
+            const scoreItem = document.createElement('div');
+            scoreItem.className = `score-item ${interpretationData.class}`;
+            scoreItem.innerHTML = `
+                <strong>${category} Score:</strong> <span style="font-weight: bold;">${totalScore}</span> / 15
+                <br>
+                <span style="font-size: 1em;">
+                    Tingkat Kebutuhan Dukungan: <span style="font-weight: bold; color: ${interpretationData.class === 'high' ? '#dc3545' : interpretationData.class === 'moderate' ? '#ffc107' : '#28a745'}">${interpretationData.label}</span>
+                </span>
+                <p style="font-size: 0.9em; margin-top: 5px; color: #555;">Rekomendasi: ${interpretationData.recommendation}</p>
+            `;
+            scoreSummaryElement.appendChild(scoreItem);
+        }
+        
+        console.log("Skor Akhir:", scores);
+    }
+
+    // MULAI: Panggil startQuiz saat tombol diklik
+    startButton.onclick = startQuiz;
+
+</script>
+
+</body>
+</html>
