@@ -17,6 +17,15 @@
             align-items: center;
             min-height: 100vh;
         }
+        /* BARU: Class untuk Konfirmasi Klik */
+        .choice-btn.clicked {
+            background-color: #ff6b6b; /* Warna latar belakang berubah */
+            color: white;             /* Warna teks kontras */
+            border-color: #ff6b6b;
+            /* Kita bisa hapus transform di sini karena JS akan mengendalikan */
+        }
+
+        /* (Pastikan .choice-btn:active dihapus atau dinonaktifkan) */
         .quiz-container {
             width: 90%;
             max-width: 650px;
@@ -46,20 +55,7 @@
             padding: 10px;
             border-left: 5px solid #4ecdc4; /* Warna border baru */
         }
-        .choice-btn {
-            display: block;
-            width: 100%; 
-            padding: 15px;
-            margin-bottom: 12px;
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: background-color 0.3s, border-color 0.3s;
-            text-align: left;
-        }
+        
         .choice-btn:hover {
             background-color: #e9ecef;
             border-color: #ff6b6b;
@@ -246,21 +242,53 @@
         
         choicesContainer.innerHTML = ''; 
 
+        function loadStep() {
+        if (currentStep >= questions.length) {
+            showFinalResult();
+            return;
+        }
+        
+        const step = questions[currentStep];
+        
+        stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
+        
+        // (JIKA KAMU SUDAH TAMBAH KODE GAMBAR, KODE ITU ADA DI SINI)
+        
+        const fullQuestionText = `Dalam <strong>dua minggu terakhir</strong>, seberapa sering kamu terganggu oleh hal ini: <strong>${step.text}</strong>`;
+        questionTextElement.innerHTML = fullQuestionText;
+        
+        choicesContainer.innerHTML = ''; 
+
         answerScale.forEach((answer) => {
             const button = document.createElement('button');
             button.className = 'choice-btn';
             button.textContent = answer.text;
-            button.onclick = () => chooseChoice(answer.score, step.category); 
+            
+            // 👇 INI YANG BERUBAH: Meneruskan elemen tombol 'button' sebagai argumen
+            button.onclick = () => chooseChoice(answer.score, step.category, button); 
+            
             choicesContainer.appendChild(button);
         });
     }
 
-    function chooseChoice(score, category) {
-        // Logika skoring langsung (tanpa reverse scoring)
+  function chooseChoice(score, category, buttonElement) {
+        // 1. Terapkan kelas 'clicked' ke tombol yang baru diklik
+        buttonElement.classList.add('clicked');
+        
+        // Simpan skor sebelum jeda
         scores[category] += score;
         
-        currentStep++; 
-        loadStep();    
+        // 2. Beri jeda singkat agar pengguna melihat perubahan warna
+        setTimeout(() => {
+            // Hapus kelas 'clicked' dari tombol yang lain (untuk jaga-jaga)
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.classList.remove('clicked');
+            });
+            
+            // 3. Lanjutkan ke langkah berikutnya
+            currentStep++; 
+            loadStep();
+        }, 300); // Jeda 300 milidetik (0.3 detik)
     }
     
     function getInterpretation(category, totalScore) {
