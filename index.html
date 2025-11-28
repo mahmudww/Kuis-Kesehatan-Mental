@@ -45,7 +45,7 @@
             text-align: left;
             padding: 10px;
             border-left: 5px solid #4ecdc4;
-            /* 👇 TAMBAHAN: Transisi untuk efek fade-in */
+            /* TRANSISI UNTUK FADE-IN/OUT */
             transition: opacity 0.4s ease-in-out; 
         }
         /* Style untuk Gambar Pertanyaan (Rata Tengah) */
@@ -56,7 +56,7 @@
             margin: 0 auto 20px auto;
             display: block;
             border-radius: 8px;
-            /* 👇 TAMBAHAN: Transisi untuk efek fade-in */
+            /* TRANSISI UNTUK FADE-IN/OUT */
             transition: opacity 0.4s ease-in-out;
         }
 
@@ -254,13 +254,9 @@
         
         choicesContainer.innerHTML = ''; 
         
-        // 🚨 TAMPILKAN KEMBALI KONTEN DENGAN EFEK FADE-IN (karena CSS transition sudah diatur)
-        questionTextElement.style.opacity = '1'; 
-        
-        // Memastikan gambar juga ditampilkan dengan fade-in jika tidak disembunyikan
-        if (questionImageElement.style.display !== 'none') {
-            questionImageElement.style.opacity = '1';
-        }
+        // 1. Pastikan opacity disetel ke 0 sebelum konten baru dimasukkan (untuk memicu fade-in)
+        questionTextElement.style.opacity = '0';
+        questionImageElement.style.opacity = '0';
 
         answerScale.forEach((answer) => {
             const button = document.createElement('button');
@@ -271,6 +267,15 @@
             
             choicesContainer.appendChild(button);
         });
+
+        // 2. KUNCI PERBAIKAN: Gunakan setTimeout 50ms untuk memaksa transisi fade-in
+        setTimeout(() => {
+            questionTextElement.style.opacity = '1'; 
+            
+            if (questionImageElement.style.display !== 'none') {
+                questionImageElement.style.opacity = '1';
+            }
+        }, 50); // Jeda sangat singkat (50ms) untuk memicu transisi CSS
     }
 
     function loadStep() {
@@ -283,12 +288,10 @@
         
         stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
         
-        // 1. SEMBUNYIKAN KONTEN LAMA (Memulai transisi fade-out)
+        // KOSONGKAN PILIHAN JAWABAN SEMENTARA
         choicesContainer.innerHTML = ''; 
-        questionTextElement.style.opacity = '0'; 
-        questionImageElement.style.opacity = '0';
         
-        // 2. TANGANI GAMBAR
+        // 1. TANGANI GAMBAR
         if (step.image) {
             questionImageElement.src = step.image;
             questionImageElement.style.display = 'block';
@@ -317,7 +320,7 @@
         // Simpan skor sebelum jeda
         scores[category] += score;
         
-        // 2. Beri jeda 400 milidetik (0.4 detik) untuk konfirmasi klik (FIX: delay lebih halus)
+        // 2. Beri jeda 400 milidetik (0.4 detik) untuk konfirmasi klik
         setTimeout(() => {
             
             // Hapus kelas 'clicked' dari semua tombol
