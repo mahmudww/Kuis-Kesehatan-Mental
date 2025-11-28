@@ -46,13 +46,13 @@
             padding: 10px;
             border-left: 5px solid #4ecdc4; /* Warna border baru */
         }
-        /* Style untuk Gambar Pertanyaan */
+        /* Style untuk Gambar Pertanyaan (Rata Tengah) */
         #question-image {
             width: 100%; 
-            max-width: 400px; /* Batasan Lebar Maksimum */
+            max-width: 400px; 
             height: auto; 
-            margin: 0 auto 20px auto; /* BARU: Memberi Margin Atas/Bawah dan Auto Kiri/Kanan */
-            display: block; /* PENTING: Mengubahnya menjadi block agar margin auto bekerja */
+            margin: 0 auto 20px auto; /* Membuat gambar rata tengah (auto) */
+            display: block; /* Penting agar margin auto bekerja */
             border-radius: 8px;
         }
 
@@ -129,7 +129,7 @@
     <div id="intro-screen">
         <p style="font-size: 1.1em; text-align: left;">Hai! Kuis ini dibuat untuk bantu kamu kenalan lebih dekat sama kondisi mentalmu. Kami akan identifikasi area yang mungkin butuh perhatian.</p>
         <p style="font-size: 1.1em; text-align: left; font-weight: bold; color: #ff6b6b;">📝 Jawab dengan jujur dan cepat. Kuis ini hanya butuh waktu <strong>KURANG DARI 3 MENIT!</strong></p>
-        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan **gak** pengganti diagnosa profesional.</p>
+        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan gak pengganti diagnosa profesional.</p>
         <button id="start-button" class="choice-btn" style="text-align: center; background-color: #ff6b6b; color: white; margin-top: 30px;">Mulai Cek Kondisi Mental (3 Menit)</button>
     </div>
 
@@ -241,25 +241,9 @@
         loadStep();
     }
 
-    function loadStep() {
-        if (currentStep >= questions.length) {
-            showFinalResult();
-            return;
-        }
+    // Fungsi untuk menampilkan konten (teks dan tombol) setelah gambar siap
+    function displayQuestionContent(step) {
         
-        const step = questions[currentStep];
-        
-        stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
-        
-        // Set URL Gambar dan tampilkan (jika ada)
-        if (step.image) {
-            questionImageElement.src = step.image;
-            questionImageElement.style.display = 'block';
-        } else {
-            questionImageElement.style.display = 'none';
-        }
-        
-        // Gabungkan kerangka waktu dan pertanyaan untuk kejelasan.
         const fullQuestionText = `Dalam <strong>dua minggu terakhir</strong>, seberapa sering kamu terganggu oleh hal ini: <strong>${step.text}</strong>`;
         questionTextElement.innerHTML = fullQuestionText;
         
@@ -270,11 +254,44 @@
             button.className = 'choice-btn';
             button.textContent = answer.text;
             
-            // Perubahan: Meneruskan elemen tombol 'button' ke chooseChoice
             button.onclick = () => chooseChoice(answer.score, step.category, button); 
             
             choicesContainer.appendChild(button);
         });
+    }
+
+    function loadStep() {
+        if (currentStep >= questions.length) {
+            showFinalResult();
+            return;
+        }
+        
+        const step = questions[currentStep];
+        
+        stepCounterElement.textContent = `Pertanyaan ${currentStep + 1} dari ${questions.length}`;
+        
+        // 1. KOSONGKAN PILIHAN JAWABAN SEMENTARA
+        choicesContainer.innerHTML = 'Memuat pertanyaan selanjutnya...'; 
+
+        // 2. TANGANI GAMBAR
+        if (step.image) {
+            questionImageElement.src = step.image;
+            questionImageElement.style.display = 'block';
+            
+            // TUNGGU GAMBAR SELESAI DI-LOAD sebelum menampilkan konten
+            questionImageElement.onload = () => {
+                displayQuestionContent(step);
+            };
+            // Penanganan jika gambar gagal di-load
+            questionImageElement.onerror = () => {
+                console.error("Gagal memuat gambar:", step.image);
+                displayQuestionContent(step); // Tetap tampilkan teks pertanyaan
+            };
+        } else {
+            questionImageElement.style.display = 'none';
+            // Jika tidak ada gambar, langsung tampilkan konten
+            displayQuestionContent(step);
+        }
     }
 
     // Fungsi sekarang menerima elemen tombol (buttonElement) untuk efek klik
