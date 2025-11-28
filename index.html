@@ -12,10 +12,9 @@
             padding: 0;
             background-color: #f7f7f7; 
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            /* ❌ PENTING: Flexbox centering dihilangkan untuk mencegah lompatan layar */
             min-height: 100vh;
+            position: relative; /* Diperlukan agar absolute positioning anak bekerja */
         }
         .quiz-container {
             width: 90%;
@@ -25,6 +24,15 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
+            
+            /* 👇 KUNCI PERBAIKAN: Absolute Centering yang stabil */
+            position: absolute;
+            top: 50%; /* Pindahkan 50% dari atas */
+            left: 50%; /* Pindahkan 50% dari kiri */
+            transform: translate(-50%, -50%); /* Geser kembali 50% dari ukuran diri sendiri */
+            
+            /* Memastikan konten kuis berada di atas */
+            z-index: 10;
         }
         h1 {
             color: #ff6b6b;
@@ -45,7 +53,6 @@
             text-align: left;
             padding: 10px;
             border-left: 5px solid #4ecdc4;
-            /* TRANSISI UNTUK FADE-IN/OUT */
             transition: opacity 0.5s ease-in-out; 
         }
         /* Style untuk Gambar Pertanyaan (Rata Tengah) */
@@ -56,7 +63,6 @@
             margin: 0 auto 20px auto;
             display: block;
             border-radius: 8px;
-            /* TRANSISI UNTUK FADE-IN/OUT */
             transition: opacity 0.5s ease-in-out;
         }
 
@@ -71,7 +77,6 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1em;
-            /* Transisi juga diupdate untuk opacity */
             transition: background-color 0.15s, border-color 0.15s, opacity 0.5s ease-in-out;
             text-align: left;
         }
@@ -91,7 +96,6 @@
 
         /* Container choices perlu property agar height bisa diatur oleh JS */
         #choices-container {
-             /* Penting untuk memastikan height dapat diatur saat reflow fix */
             min-height: 10px;
         }
         
@@ -102,27 +106,14 @@
             color: #28a745;
             margin-top: 0;
         }
-        #score-summary {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .score-item {
-            padding: 10px;
-            margin: 8px 0;
-            border-left: 4px solid;
-            font-size: 1.1em;
-            background-color: #f8f9fa;
-        }
+        /* ... CSS Lainnya ... */
         .score-item strong {
             display: inline-block;
             min-width: 150px;
         }
-
-        /* Warna Border untuk Interpretasi */
         .low { border-left-color: #28a745; }
         .moderate { border-left-color: #ffc107; }
         .high { border-left-color: #dc3545; }
-        
         .score-footer {
             margin-top: 30px;
             padding-top: 15px;
