@@ -142,7 +142,7 @@
     <div id="intro-screen">
         <p style="font-size: 1.1em; text-align: left;">Hai! Kuis ini dibuat untuk bantu kamu kenalan lebih dekat sama kondisi mentalmu. Kami akan identifikasi area yang mungkin butuh perhatian.</p>
         <p style="font-size: 1.1em; text-align: left; font-weight: bold; color: #ff6b6b;">📝 Jawab dengan jujur dan cepat. Kuis ini hanya butuh waktu <strong>KURANG DARI 3 MENIT!</strong></p>
-        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan bukan pengganti diagnosa profesional.</p>
+        <p style="font-size: 0.9em; margin-top: 20px; text-align: left; color: #6c757d;">Penting: Kuis ini hanya alat bantu <i>self-awareness</i> dan gak pengganti diagnosa profesional.</p>
         <button id="start-button" class="choice-btn" style="text-align: center; background-color: #ff6b6b; color: white; margin-top: 30px;">Mulai Cek Kondisi Mental (3 Menit)</button>
     </div>
 
@@ -181,30 +181,35 @@
     ];
 
     // --- PERTANYAN (SEMUA JALUR MENGGUNANAKAN .jpeg) ---
+    // 🚨 PERBAIKAN V31: Pertanyaan dipertajam untuk membedakan kategori
     const questions = [
-        { category: "Depresi", text: "Merasa sedih, <em>down</em>, atau putus asa (bukan ada harapan).", image: "./images/q1.jpeg" }, 
-        { category: "Depresi", text: "Bukan semangat atau bukan menikmati hal-hal yang biasanya kamu suka.", image: "./images/q2.jpeg" },
-        { category: "Depresi", text: "Merasa capek banget atau bukan punya energi.", image: "./images/q3.jpeg" },
-        { category: "Depresi", text: "Mengalami masalah tidur (susah tidur, tidur kebanyakan, atau sering bangun).", image: "./images/q4.jpeg" },
-        { category: "Depresi", text: "Merasa kamu itu gagal, mengecewakan diri sendiri atau orang lain.", image: "./images/q5.jpeg" },
+        // DEPRESI
+        { category: "Depresi", text: "Merasa sangat sedih, **muram**, atau putus asa (termasuk perasaan tidak berharga).", image: "./images/q1.jpeg" }, 
+        { category: "Depresi", text: "**Kehilangan minat** yang besar atau **gak lagi menikmati** kegiatan yang dulu disukai (Anhedonia).", image: "./images/q2.jpeg" },
+        { category: "Depresi", text: "Merasa energi **sangat menurun** atau hampir selalu mengalami **keletihan fisik** yang gak hilang setelah istirahat.", image: "./images/q3.jpeg" },
+        { category: "Depresi", text: "Mengalami perubahan signifikan pada pola tidur (misalnya, **insomnia**, atau **hipersomnia**).", image: "./images/q4.jpeg" },
+        { category: "Depresi", text: "Merasa **bersalah yang berlebihan** atau yakin kamu adalah **orang yang gagal** secara keseluruhan.", image: "./images/q5.jpeg" },
         
-        { category: "Kecemasan", text: "Merasa gugup, cemas, atau tegang berlebihan tanpa alasan jelas.", image: "./images/q6.jpeg" },
-        { category: "Kecemasan", text: "Bukan bisa berhenti atau mengontrol pikiran yang bikin khawatir (<em>overthinking</em>).", image: "./images/q7.jpeg" },
-        { category: "Kecemasan", text: "Terlalu khawatir tentang banyak hal (sekolah, kerjaan, uang, dll.).", image: "./images/q8.jpeg" },
-        { category: "Kecemasan", text: "Sulit banget buat santai atau merasa bukan tenang.", image: "./images/q9.jpeg" },
-        { category: "Kecemasan", text: "Gampang banget marah atau terganggu (sensitif).", image: "./images/q10.jpeg" },
+        // KECEMASAN
+        { category: "Kecemasan", text: "Merasa **gelisah** atau **tidak bisa diam**, seolah ada bahaya yang akan datang.", image: "./images/q6.jpeg" },
+        { category: "Kecemasan", text: "Sulit mengendalikan **kekhawatiran yang mengganggu** (seperti ketakutan tidak rasional) yang muncul terus-menerus.", image: "./images/q7.jpeg" },
+        { category: "Kecemasan", text: "Merasa **otot tegang**, **jantung berdebar**, atau mengalami gejala fisik lain saat merasa cemas.", image: "./images/q8.jpeg" },
+        { category: "Kecemasan", text: "Merasa **pikiran kosong**, gak fokus, atau kesulitan mengambil keputusan karena cemas.", image: "./images/q9.jpeg" },
+        { category: "Kecemasan", text: "Merasa khawatir akan **peristiwa kecil** yang mungkin terjadi dan tidak bisa menghentikannya.", image: "./images/q10.jpeg" },
 
-        { category: "Stres", text: "Merasa tertekan sama hal-hal yang terjadi mendadak atau di luar rencana?", image: "./images/q11.jpeg" },
-        { category: "Stres", text: "Merasa kamu bukan sanggup nanganin semua tugas/tanggung jawab kamu?", image: "./images/q12.jpeg" },
-        { category: "Stres", text: "Merasa marah atau kesal karena ada hal-hal yang bukan bisa kamu kontrol?", image: "./images/q13.jpeg" },
-        { category: "Stres", text: "Merasa <strong>KESULITAN</strong> banget ngontrol gimana kamu pakai waktu kamu?", image: "./images/q14.jpeg" }, 
-        { category: "Stres", text: "Merasa susah banget buat ngendalikan hal-hal yang bikin kamu iritasi di hidup kamu?", image: "./images/q15.jpeg" },
+        // STRES
+        { category: "Stres", text: "Merasa **tekanan mental** saat harus beradaptasi dengan perubahan atau situasi baru.", image: "./images/q11.jpeg" },
+        { category: "Stres", text: "Merasa hal-hal dalam hidup **di luar kendali** kamu, sehingga sulit berfungsi normal.", image: "./images/q12.jpeg" },
+        { category: "Stres", text: "**Merasa kesal, marah, atau tertekan** karena interaksi dengan orang lain (konflik interpersonal).", image: "./images/q13.jpeg" },
+        { category: "Stres", text: "Mengalami **sakit kepala, sakit perut, atau pusing** yang muncul saat menghadapi tuntutan.", image: "./images/q14.jpeg" }, 
+        { category: "Stres", text: "Merasa **kewalahan** oleh semua tuntutan dan tenggat waktu yang menumpuk.", image: "./images/q15.jpeg" },
 
-        { category: "Kelelahan", text: "Merasa terkuras fisik dan emosional di akhir hari/aktivitas (habis energi)?", image: "./images/q16.jpeg" },
-        { category: "Kelelahan", text: "Merasa sinis atau bukan peduli sama kerjaan/aktivitas harian kamu?", image: "./images/q17.jpeg" },
-        { category: "Kelelahan", text: "Merasa kemampuan atau efektivitas kamu menurun drastis?", image: "./images/q18.jpeg" },
-        { category: "Kelelahan", text: "Cenderung ngejauhin diri dari teman/rekan kerja dan cuma mau sendirian?", image: "./images/q19.jpeg" },
-        { category: "Kelelahan", text: "Merasa usaha kamu bukan dihargai atau bukan ada artinya?", image: "./images/q20.jpeg" }
+        // KELELAHAN (BURNOUT)
+        { category: "Kelelahan", text: "Merasa **lelah** secara emosional dan fisik **akibat pekerjaan/peran** kamu sehari-hari.", image: "./images/q16.jpeg" },
+        { category: "Kelelahan", text: "Merasa **sinis**, **negatif**, atau **skeptis** terhadap rekan kerja/tanggung jawab kamu.", image: "./images/q17.jpeg" },
+        { category: "Kelelahan", text: "Merasa telah **kehilangan efektivitas** atau **prestasi** dalam pekerjaan/aktivitas yang kamu lakukan.", image: "./images/q18.jpeg" },
+        { category: "Kelelahan", text: "**Menarik diri** dari interaksi sosial di tempat kerja/lingkungan aktivitas kamu.", image: "./images/q19.jpeg" },
+        { category: "Kelelahan", text: "**Meragukan** nilai atau dampak dari pekerjaan/aktivitas yang kamu lakukan sehari-hari.", image: "./images/q20.jpeg" }
     ];
 
     // --- INTERPRETASI SKOR ---
@@ -217,7 +222,7 @@
         Kecemasan: [
             { threshold: 10, label: "Tinggi", class: "high", recommendation: "Tingkat Kecemasanmu tinggi dan mengganggu aktivitas. Penting banget untuk belajar teknik relaksasi dan pertimbangkan untuk konsultasi." },
             { threshold: 5, label: "Sedang", class: "moderate", recommendation: "Kekhawatiranmu cukup menguras energi. Coba batasi sumber stres (sosial media, berita) dan fokus pada <i>mindfulness</i>." },
-            { threshold: 0, label: "Rendah", class: "low", recommendation: "Kamu termasuk orang yang tenang dan bukan gampang panik. Nice!" }
+            { threshold: 0, label: "Rendah", class: "low", recommendation: "Kamu termasuk orang yang tenang dan gak gampang panik. Nice!" }
         ],
         Stres: [
             { threshold: 10, label: "Tinggi", class: "high", recommendation: "Stresmu sudah di level bahaya! Kamu perlu evaluasi ulang batas (<i>boundary</i>) dan beban kerja/hidupmu. Istirahat jadi prioritas utama." },
